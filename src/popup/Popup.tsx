@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import "./Popup.scss";
 
 export default function Popup() {
   useEffect(() => {
@@ -7,5 +6,5 @@ export default function Popup() {
     chrome.runtime.sendMessage({ popupMounted: true });
   }, []);
 
-  return <div className="popupContainer">Hello, world!</div>;
+  return <div className="bg-red-500 text-white">Hello, world!</div>;
 }
