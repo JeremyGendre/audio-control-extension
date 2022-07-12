@@ -1,18 +1,17 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
 
     "name": "Audio control extension",
     "description": "Chrome audio tabs manager extension",
     "version": "1.0.0",
 
-    "browser_action": {
+    "action": {
         "default_icon": "icon16.png",
         "default_popup": "popup.html"
     },
 
     "background": {
-        "scripts": ["js/eventPage.js"],
-        "persistent": false
+        "service_worker": "js/eventPage.js"
     },
 
     "icons": {
@@ -21,5 +20,7 @@
         "128": "icon128.png"
     },
 
-    "permissions": []
+    "permissions": [
+        "tabs"
+    ]
 }
