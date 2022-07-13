@@ -1,20 +1,20 @@
 import React, {useEffect, useState} from "react";
-import {truncateString} from "../utils/functions";
-import ChevronRight from "../icons/ChevronRight";
 import TabRow from "./TabRow";
+import TabContent from "./TabContent";
 
 export default function Popup() {
-    const [tabs, setTabs] = useState([]);
-    const [openedTab, setOpenedtab] = useState<chrome.tabs.Tab|null>(null);
+    //const [tabs, setTabs] = useState([]);
+    //const [openedTab, setOpenedtab] = useState<chrome.tabs.Tab|null>(null);
+    const [tabVolume, setTabVolume] = useState("100");
 
     useEffect(() => {
         chrome.runtime.sendMessage({ popupMounted: true });
-        chrome.tabs.query({}, setTabs);
+        //chrome.tabs.query({}, setTabs);
     }, []);
 
     return (
         <div className="p-2 w-64">
-            {tabs.map(tab => (
+            {/*tabs.map(tab => (
                 <TabRow
                     key={tab.id}
                     tab={tab}
@@ -27,7 +27,8 @@ export default function Popup() {
                         setOpenedtab(tab);
                     }}
                 />
-            ))}
+            ))*/}
+            <TabContent volume={tabVolume} onChange={setTabVolume}/>
         </div>
     );
 }
