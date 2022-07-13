@@ -13,6 +13,7 @@ interface TabRowProps{
 export default function TabRow({tab, isOpened = false, onClick = () => {}}: TabRowProps){
     //const [tabId, setTabId] = useState(undefined);
     const [volume, setVolume] = useState("100");
+    const [muted, setMuted] = useState(false);
 
     useEffect(() => {
         const getVolume = async () => {
@@ -26,6 +27,7 @@ export default function TabRow({tab, isOpened = false, onClick = () => {}}: TabR
 
     const handleVolumeChange = async (newVol) => {
         setVolume(newVol);
+        setMuted(false);
         await setTabVolume(tab.id,parseInt(newVol) / 100);
     };
 
@@ -39,9 +41,9 @@ export default function TabRow({tab, isOpened = false, onClick = () => {}}: TabR
                     <ChevronRight className={`my-auto mr-1 transition duration-150 ${isOpened ? 'rotate-90' : ''}`}/>
                     <div className="my-auto">{truncateString(tab.title ?? tab.id.toString())}</div>
                 </div>
-                {(parseInt(volume) < 100) && <div>{volume}%</div>}
+                {(parseInt(volume) < 100) && <div className={muted ? 'line-through' : ''}>{volume}%</div>}
             </div>
-            {isOpened && <TabContent volume={volume} onChange={handleVolumeChange}/>}
+            {isOpened && <TabContent volume={volume} onChange={handleVolumeChange} muted={muted} onMutedChange={setMuted}/>}
         </div>
     );
 }
