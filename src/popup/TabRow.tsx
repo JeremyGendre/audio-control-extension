@@ -11,17 +11,14 @@ interface TabRowProps{
 }
 
 export default function TabRow({tab, isOpened = false, onClick = () => {}}: TabRowProps){
-    //const [tabId, setTabId] = useState(undefined);
     const [volume, setVolume] = useState("100");
     const [muted, setMuted] = useState(!!tab.mutedInfo.muted);
 
     useEffect(() => {
         const getVolume = async () => {
-            //const currentTabId = await getActiveTabId();
             const vol = ((await getTabVolume(tab.id)) * 100).toString();
             setVolume(vol);
         };
-
         getVolume();
     }, [tab]);
 
@@ -32,7 +29,6 @@ export default function TabRow({tab, isOpened = false, onClick = () => {}}: TabR
     };
 
     useEffect(() => {
-        console.log(muted);
         chrome.tabs.update(tab.id, {muted});
         if(muted) setTabVolume(tab.id,0);
         else setTabVolume(tab.id,parseInt(volume) / 100);

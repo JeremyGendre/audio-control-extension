@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from "react";
-import TabContent from "./TabContent";
-import {getTabVolume, setTabVolume} from "../eventPage";
 import 'chrome-extension-async'
 import TabRow from "./TabRow";
+import {Message} from "../eventPage";
 
 export default function Popup() {
     const [tabs, setTabs] = useState([]);
@@ -36,4 +35,15 @@ export async function getActiveTabId () {
     const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
     return activeTab.id;
 }
+
+export async function getTabVolume(tabId: number){
+    const message: Message = { name: 'get-volume', tabId };
+    return chrome.tabs.sendMessage(tabId, message);
+}
+
+export async function setActiveTabVolume (tabId: number, value: number) {
+    const message: Message = { name: 'set-volume', tabId, value };
+    return chrome.tabs.sendMessage(tabId, message);
+}
+
 
