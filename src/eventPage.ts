@@ -36,16 +36,30 @@ const tabs: { [tabId: number]: Promise<CapturedTab> } = {};
 
 function captureTab (tabId: number) {
     tabs[tabId] = new Promise(async resolve => {
-        const stream = await chrome.tabCapture.capture({ audio: true, video: false });
+        /*const stream = await chrome.tabCapture.capture({
+            audio: true,
+            video: false
+        });*/
+        chrome.tabCapture.getMediaStreamId({targetTabId: tabId}, async (streamId) => {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: {
+                    // @ts-ignore
+                    mandatory: {
+                        chromeMediaSource: 'tab',
+                        chromeMediaSourceId: streamId,
+                    }
+                }
+            });
 
-        const audioContext = new AudioContext();
-        const streamSource = audioContext.createMediaStreamSource(stream);
-        const gainNode = audioContext.createGain();
+            const audioContext = new AudioContext();
+            const streamSource = audioContext.createMediaStreamSource(stream);
+            const gainNode = audioContext.createGain();
 
-        streamSource.connect(gainNode);
-        gainNode.connect(audioContext.destination);
+            streamSource.connect(gainNode);
+            gainNode.connect(audioContext.destination);
 
-        resolve({ audioContext, streamSource, gainNode })
+            resolve({ audioContext, streamSource, gainNode });
+        });
     })
 }
 

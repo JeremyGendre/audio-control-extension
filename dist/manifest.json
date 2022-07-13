@@ -13,6 +13,12 @@
     "background": {
         "service_worker": "js/eventPage.js"
     },
+    "content_scripts": [
+        {
+            "js": ["js/eventPage.js"],
+            "matches": ["<all_urls>"]
+        }
+    ],
 
     "icons": {
         "16": "icon16.png",
@@ -22,6 +28,7 @@
 
     "permissions": [
         "activeTab",
+        "tabs",
         "tabCapture"
     ]
 }
