@@ -1,16 +1,30 @@
 import React, {useEffect, useState} from "react";
-import TabRow from "./TabRow";
 import TabContent from "./TabContent";
+import {getTabVolume, Message, setTabVolume} from "../eventPage";
+import 'chrome-extension-async'
 
 export default function Popup() {
     //const [tabs, setTabs] = useState([]);
     //const [openedTab, setOpenedtab] = useState<chrome.tabs.Tab|null>(null);
-    const [tabVolume, setTabVolume] = useState("100");
+    const [tabId, setTabId] = useState(undefined);
+    const [volume, setVolume] = useState("100");
 
     useEffect(() => {
-        chrome.runtime.sendMessage({ popupMounted: true });
         //chrome.tabs.query({}, setTabs);
+        const getVolume = async () => {
+            const currentTabId = await getActiveTabId();
+            const vol = ((await getTabVolume(currentTabId)) * 100).toString();
+            setTabId(currentTabId);
+            setVolume(vol);
+        };
+
+        getVolume();
     }, []);
+
+    const handleVolumeChange = async (newVol) => {
+        setVolume(newVol);
+        await setTabVolume(tabId,parseInt(newVol) / 100);
+    };
 
     return (
         <div className="p-2 w-64">
@@ -28,7 +42,25 @@ export default function Popup() {
                     }}
                 />
             ))*/}
-            <TabContent volume={tabVolume} onChange={setTabVolume}/>
+            <TabContent volume={volume} onChange={handleVolumeChange}/>
         </div>
     );
 }
+
+async function getActiveTabVolume () {
+    const tabId = await getActiveTabId();
+    const message: Message = { name: 'get-volume', tabId };
+    return await chrome.runtime.sendMessage(message);
+}
+
+async function setActiveTabVolume (volume: number) {
+    const tabId = await getActiveTabId();
+    const message: Message = { name: 'set-volume', tabId, value: volume };
+    return await chrome.runtime.sendMessage(message);
+}
+
+async function getActiveTabId () {
+    const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    return activeTab.id;
+}
+
