@@ -29,6 +29,10 @@ chrome.runtime.onMessage.addListener(async (message: Message, sender, resolve) =
     }
 });
 
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    console.log(tabId, changeInfo, tab);
+});
+
 // Clean everything up once the tab is closed
 chrome.tabs.onRemoved.addListener(removeTab);
 

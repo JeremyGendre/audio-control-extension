@@ -32,7 +32,10 @@ export default function TabRow({tab, isOpened = false, onClick = () => {}}: TabR
     };
 
     useEffect(() => {
+        console.log(muted);
         chrome.tabs.update(tab.id, {muted});
+        if(muted) setTabVolume(tab.id,0);
+        else setTabVolume(tab.id,parseInt(volume) / 100);
     },[muted]);
 
     return (
