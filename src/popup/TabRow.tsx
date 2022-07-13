@@ -13,7 +13,7 @@ interface TabRowProps{
 export default function TabRow({tab, isOpened = false, onClick = () => {}}: TabRowProps){
     //const [tabId, setTabId] = useState(undefined);
     const [volume, setVolume] = useState("100");
-    const [muted, setMuted] = useState(false);
+    const [muted, setMuted] = useState(!!tab.mutedInfo.muted);
 
     useEffect(() => {
         const getVolume = async () => {
@@ -30,6 +30,10 @@ export default function TabRow({tab, isOpened = false, onClick = () => {}}: TabR
         setMuted(false);
         await setTabVolume(tab.id,parseInt(newVol) / 100);
     };
+
+    useEffect(() => {
+        chrome.tabs.update(tab.id, {muted});
+    },[muted]);
 
     return (
         <div className={`border border-transparent hover:border-slate-200 transition duration-150`}>
