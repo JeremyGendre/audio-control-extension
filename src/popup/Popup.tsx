@@ -47,18 +47,6 @@ export default function Popup() {
     );
 }
 
-async function getActiveTabVolume () {
-    const tabId = await getActiveTabId();
-    const message: Message = { name: 'get-volume', tabId };
-    return await chrome.runtime.sendMessage(message);
-}
-
-async function setActiveTabVolume (volume: number) {
-    const tabId = await getActiveTabId();
-    const message: Message = { name: 'set-volume', tabId, value: volume };
-    return await chrome.runtime.sendMessage(message);
-}
-
 async function getActiveTabId () {
     const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
     return activeTab.id;
